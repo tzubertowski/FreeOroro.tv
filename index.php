@@ -24,13 +24,20 @@
 	<div id="formcontainer" class="centerbody" style="margin: 0 auto;width: 335px;margin-top:10%;">
 		<form id="urlForm" class="pure-form" action="getVideoContent.php">
 		    <fieldset>
-		        <legend><h3>Ororo.tv darmoo</h3></legend>
+		        <legend><h3>Ororo.tv za darmooo</h3></legend>
 
 
-		        <input type="text" placeholder="url" class="pure-input-rounded" name='url'>
-
+		        <input type="text" placeholder="url" class="pure-input-rounded" name='url' required>
+                        <label for="mp4" class="pure-radio">
+                            <input id="mp4" type="radio" name="extensionType" value="mp4" checked>
+                            MP4
+                        </label>
+                        <label for="webm" class="pure-radio">
+                            <input id="webm" type="radio" name="extensionType" value="webm">
+                            webm (nie dla IE)
+                        </label>
 		        <button type="submit" class="pure-button pure-button-primary">Get video</button>
-
+                        
 
 		    </fieldset>
 		    	    	<legend> </legend>

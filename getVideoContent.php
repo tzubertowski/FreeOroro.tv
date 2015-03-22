@@ -1,6 +1,11 @@
 <?php
 // Get episode url contents
 $episodeUrl = $_POST['data'];
+$desiredExtension = $_POST['ext'];
+if (empty($episodeUrl)) {
+   return false; 
+}
+
 if (strpos($episodeUrl,'http://') === false){
 	$episodeUrl = 'http://'.$episodeUrl;
 }
@@ -24,7 +29,10 @@ foreach ($dom->getElementsByTagName('a') as $node) {
 if(!empty($newHtmlUrl)) {
 	$newHtml = file_get_contents($basePath . $newHtmlUrl);
 	preg_match("<source src='(.*?)' type='video/webm'>",$newHtml, $display);
-	echo $display[1];
+        $withoutExt = preg_replace('/\\.[^.\\s]{3,4}$/', '', $display[1]);
+        $extMatch = $withoutExt.'.'.$desiredExtension;
+        
+	echo $extMatch;
 }
 
 ?>
