@@ -1,6 +1,9 @@
 <?php
 // Get episode url contents
 $episodeUrl = $_POST['data'];
+if (strpos($episodeUrl,'http://') === false){
+	$episodeUrl = 'http://'.$episodeUrl;
+}
 $basePath = 'http://ororo.tv';
 // $episodeUrl = 'http://ororo.tv/pl/shows/big-bang-theory#1-4';
 $episodeHtml = file_get_contents($episodeUrl);

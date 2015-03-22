@@ -1,4 +1,5 @@
-$(document).ready(function() {  
+$(document).ready(function() {
+		$('#orohandler').hide();  
         $('#urlForm').submit(function() { 
 		 
 		  // Stop form from submitting normally
@@ -14,8 +15,11 @@ $(document).ready(function() {
 		 
 		  // Put the results in a div
 		  posting.done(function( data ) {
-		    console.log(data);
-		    document.location=data;
+		  	$('#formcontainer').hide();
+		  	$('#ribbon').hide();
+		  	$('#orohandler').attr('src', data);
+		  	$('#orohandler').show();
+		  	console.log('k');
 		  });
 
         }); 
