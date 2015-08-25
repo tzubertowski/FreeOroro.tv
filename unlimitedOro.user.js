@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         ororo.tv unlimited
+// @name         frororo, ororo.tv unlimited
 // @namespace    http://zadnychlag.blogspot.com
 // @version      0.1
-// @description  This user script allows you to watch ororo.tv for free, unlimited.
+// @description  This user script allows you to watch ororo.tv for unlimited time.
 // @author       tzubertowski
-// @match        http://ororo.tv/pl/shows/*
+// @match        http://ororo.tv/*/shows/*
 // @match        http://*.ororo.tv/uploads/video/file/*
 // ==/UserScript==
 var vid = document.getElementsByName("media");
@@ -17,6 +17,6 @@ document.addEventListener("DOMNodeInserted", function(e) {
     var videoBeforeRedirect = document.getElementsByClassName('vjs-tech');
     if(typeof videoBeforeRedirect  !== 'undefined' && videoBeforeRedirect.length > 0) {
        var pathUrl = videoBeforeRedirect[0].src
-       window.location.replace(pathUrl);     
+       window.location.replace(pathUrl);
     }
 }, false);
