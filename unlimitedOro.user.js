@@ -9,9 +9,7 @@
 // @match        http://*.ororo.tv/uploads/video/file/*
 // ==/UserScript==
 
-
 // Modified ajax XHR interceptor, thanks to http://stackoverflow.com/questions/5202296/add-a-hook-to-all-ajax-requests-on-a-page
-
 // Used to redirect to rendering
 var baseUrl = 'http://vps180892.ovh.net/FreeOroro.tv/gibit/index.php';
 var pathUrl;
