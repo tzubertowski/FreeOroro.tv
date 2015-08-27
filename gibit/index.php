@@ -36,7 +36,7 @@
       	<track src="<?= 'tmpsrt/'.$timeStamp.'.srt' ?>" kind="subtitle" srclang="en-US" label="English" default>
       	Your browser does not support HTML5 video.
       </video> -->
-      <video id ="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%">
+      <video id ="example_video_1" class="video-js vjs-default-skin" autoplay controls preload="auto" width="100%" height="100%">
 					<source src="<?= $videoUrl ?>" type="video/mp4">
           <track src="<?= 'tmpsrt/'.$timeStamp.'.vtt' ?>" kind="subtitles" srclang="en" default>
 					<div class="message">
