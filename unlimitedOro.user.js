@@ -30,7 +30,6 @@ document.addEventListener("DOMNodeInserted", function(e) {
     if(typeof videoBeforeRedirect  !== 'undefined' && videoBeforeRedirect.length > 0) {
        pathUrl = videoBeforeRedirect[0].src
     }
-console.log('ndoeinserted');
     // Show functional buttons when player loaded
     if($('#overlay').is(':visible')) {
         $('#notification').show();
