@@ -2,21 +2,21 @@
 /**
  * SubRip File Parser
  * Allows manipulation of .srt files
- * 
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- *      
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *      
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
- * MA 02110-1301, USA. 
+ * MA 02110-1301, USA.
  *
  * @author Julien 'delphiki' Villetorte <gdelphiki@gmail.com>
  * @link http://www.lackofinspiration.com
@@ -37,42 +37,42 @@ class srtFile{
 	 * Pattern used for the parsing regex
 	 */
 	const pattern = '#[0-9]+(?:\r\n|\r|\n)([0-9]{2}:[0-9]{2}:[0-9]{2}(?:,|\.)[0-9]{3}) --> ([0-9]{2}:[0-9]{2}:[0-9]{2}(?:,|\.)[0-9]{3})(?:\r\n|\r|\n)((?:.*(?:\r\n|\r|\n))*?)(?:\r\n|\r|\n)#';
-	
+
 	/**
 	 * Default encoding if unable to detect
 	 */
 	const default_encoding = 'Windows-1252';
-	
+
 	/**
 	 * Original filename
-	 * 
+	 *
 	 * @var string
 	 */
 	private $filename;
 
 	/**
 	 * Current buffer of the file
-	 * 
+	 *
 	 * @var string
 	 */
 	private $file_content;
 
 	/**
 	 * Current buffer of the file without Advanced SSA tags
-	 * 
+	 *
 	 * @var string
 	 */
 	private $file_content_notag;
 
 	/**
 	 * Original file encoding
-	 * 
+	 *
 	 * @var string
 	 */
 	private $encoding;
 
 	/**
-	 * File has BOM or not 
+	 * File has BOM or not
 	 *
 	 * @var boolean
 	 */
@@ -80,28 +80,28 @@ class srtFile{
 
 	/**
 	 * Array containing all entries (srtFileEntry) of the subtitle
-	 * 
+	 *
 	 * @var array
 	 */
 	private $subs = array();
 
 	/**
 	 * Array containing reading speed ranges
-	 * 
+	 *
 	 * @var array
 	 */
 	private $stats = array();
 
 	/**
 	 * Build as WebVTT file
-	 * 
+	 *
 	 * @var boolean
 	 */
 	private $is_WebVTT = false;
-	
+
 	/**
 	 * srtFile constructor
-	 * 
+	 *
 	 * @param string filename
 	 * @param string encoding of the file
 	 */
@@ -153,13 +153,13 @@ class srtFile{
 		if($this->is_WebVTT)
 			$this->encoding = 'utf-8';
 	}
-	
+
 	/**
 	 * Checks if the file is a valid SubRip file
 	 * @param string $_filename The path to the file
 	 * @return boolean
 	 */
-	
+
 	public static function isValid($_filename){
 		$file_content = file_get_contents($_filename);
 
@@ -202,7 +202,7 @@ class srtFile{
 			159 => "Ÿ" # latin capital letter y with diaeresis
 		);
 		$buffer_encoded = utf8_encode($buffer);
-		
+
 		foreach($cp1252 as $ord => $encoded){
 			$buffer_encoded=str_replace(utf8_encode(chr($ord)), $encoded, $buffer_encoded);
 		}
@@ -238,9 +238,9 @@ class srtFile{
 		if(empty($res_exec[1]))
 			throw new \Exception('Unable to detect file encoding.');
 		$this->encoding = $res_exec[1];
-		
+
 		$tmp_encoding = strtolower($this->encoding);
-		
+
 		switch($tmp_encoding){
 			case 'unknown':
 			case 'windows-1252':
@@ -256,7 +256,7 @@ class srtFile{
 
 				if(strtolower(substr($this->encoding, 0, 7)) == 'unknown'){
 					$this->encoding = self::default_encoding;
-					$this->file_content = self::cp1252_to_utf8($this->file_content);		
+					$this->file_content = self::cp1252_to_utf8($this->file_content);
 				}
 				else{
 					$this->file_content = mb_convert_encoding($this->file_content, 'UTF-8', $this->encoding);
@@ -319,7 +319,7 @@ class srtFile{
 
 		if(!$case_sensitive)
 			$pattern .= 'i';
-		
+
 		$keys = array_keys($this->subs);
 		$sub_count = sizeof($keys);
 		$i = 0;
@@ -359,10 +359,10 @@ class srtFile{
 		if(!$_srtFile instanceof srtFile)
 			throw new \Exception('srtFile object parameter exepected.');
 		$this->subs = array_merge($this->subs, $_srtFile->getSubs());
-		
+
 		$this->sortSubs();
 	}
-	
+
 	/**
 	 * Deletes a cue
 	 *
@@ -390,10 +390,10 @@ class srtFile{
 		ksort($tmp);
 
 		$this->subs = array();
-		
+
 		$keys_tmp = array_keys($tmp);
 		$tmp_count = sizeof($keys_tmp);
-		
+
 		foreach($tmp as $sub)
 			$this->subs[] = $sub;
 	}
@@ -418,46 +418,46 @@ class srtFile{
 			$this->subs[$keys[$i]]->setStop($new_stop);
 		}
 	}
-        
+
         /**
         * Shifts a range of subtitles a specified amount of time.
         * @param $time The time to use (ms), which can be positive or negative.
         * @param int $startIndex The subtitle index the range begins with.
         * @param int $endIndex The subtitle index the range ends with.
-        * 
+        *
         */
 	public function shift($time, $startIndex = false, $endIndex = false) {
-            
+
             if (!is_numeric($time)) return false;
             if ($time==0) return true;
 
             $keys = array_keys($this->subs);
             $sub_count = sizeof($keys);
-            
+
             if (!$startIndex) $startIndex = 0;
             if (!$endIndex) $endIndex = $sub_count - 1;
-            
+
             $startSubtitle = $this->getSub($startIndex);
             $endSubtitle = $this->getSub($endIndex);
-            
+
             //check subtitles do exist
             if (!$startSubtitle || !$endSubtitle) return false;
-            
+
             for($i=$startIndex; $i < $endIndex; $i++){
                     $subtitle = $this->getSub($i);
                     $subtitle->shift($time);
             }
-            
+
             return true;
 	}
-        
+
 	/**
          * Auto syncs a range of subtitles given their first and last correct times.
-         * The subtitles are first shifted to the first subtitle's correct time, and then proportionally 
+         * The subtitles are first shifted to the first subtitle's correct time, and then proportionally
          * adjusted using the last subtitle's correct time.
-         * 
+         *
          * Based on gnome-subtitles (https://git.gnome.org/browse/gnome-subtitles/)
-         * 
+         *
          * @param int $startIndex The subtitle index to start the adjustment with.
          * @param int $startTime The correct start time for the first subtitle.
          * @param int $endIndex The subtitle index to end the adjustment with.
@@ -465,23 +465,23 @@ class srtFile{
          * @param bool $syncLast Whether to sync the last subtitle.
          * @return bool Whether the subtitles could be adjusted
         */
-        
+
         public function sync($startIndex,$startTime,$endIndex,$endTime,$syncLast = true) {
 
                 $keys = array_keys($this->subs);
                 $sub_count = sizeof($keys);
-            
+
                 //set first and last subtitles index
                 if (!$startIndex) $startIndex = 0;
                 if (!$endIndex) $endIndex = $sub_count - 1;
-            
+
                 //check subtitles do exist
                 $startSubtitle = $this->getSub($startIndex);
                 $endSubtitle = $this->getSub($endIndex);
                 if (!$startSubtitle || !$endSubtitle) return false;
-                
+
                 if (!($startTime < $endTime)) return false;
-		
+
 		$shift = $startTime - $startSubtitle->getStart();
 		$factor = ($endTime - $startTime) / ($endSubtitle->getStart() - $startSubtitle->getStart());
 
@@ -495,11 +495,11 @@ class srtFile{
 			$entry = $this->getSub($index);
 			$entry->scale($startTime,$factor);
 		}
-                
+
 		return true;
 	}
 
-        
+
 
 
 	/**
@@ -551,7 +551,7 @@ class srtFile{
 		if($stripTags)
 			$this->file_content_notag = $buffer;
 		else
-			$this->file_content = $buffer;	
+			$this->file_content = $buffer;
 	}
 
 	/**
@@ -563,17 +563,17 @@ class srtFile{
 	public function save($filename = null, $stripTags = false){
 		if($filename == null)
 			$filename = $this->filename;
-		
+
 		$content = $stripTags ? $this->file_content_notag : $this->file_content;
-			
+
 		if(strtolower($this->encoding) != 'utf-8')
 			$file_content = mb_convert_encoding($content, $this->encoding, 'UTF-8');
 		elseif(strtolower($this->encoding) == 'utf-8' && $this->has_BOM && substr($content, 0, 3) != UTF8_BOM)
 			$file_content = UTF8_BOM . $content;
 		else
 			$file_content = $content;
-		
-		$res = file_put_contents($filename, $file_content);
+
+		$res = file_put_contents(getcwd().'/tmpsrt/'.$filename, $file_content);
 		if(!$res)
 			throw new \Exception('Unable to save the file.');
 	}
