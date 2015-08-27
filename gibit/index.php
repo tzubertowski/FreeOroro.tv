@@ -11,6 +11,8 @@
       <?php
         // I will make it a class one day, lol
         include './helpers/curlhelper.php';
+        require('./helpers/srtFile.php');
+
         $videoUrl     = isset($_GET['vid']) ? $_GET['vid'] : null;
         $subsUrl      = isset($_GET['subs']) ? $_GET['subs'] : null;
         $curlSubs     = CurlHelper::getData($subsUrl);
@@ -18,6 +20,16 @@
 
         $srtFile      = getcwd().'/tmpsrt/'.$timeStamp.'.srt';
         file_put_contents($srtFile, $curlSubs);
+
+        try{
+        	$srt = new \SrtParser\srtFile($srtFile);
+        	$srt->setWebVTT(true);
+        	$srt->build(true);
+        	$srt->save($timeStamp.'.vtt', true);
+        }
+        catch(Exeption $e){
+        	echo "Error: ".$e->getMessage()."\n";
+        }
       ?>
       <!-- <video id="bgvid" controls="controls" srt-track="<?= 'tmpsrt/'.$timeStamp.'.srt' ?>">
       	<source src="<?= $videoUrl ?>" type="video/mp4" />
@@ -26,7 +38,7 @@
       </video> -->
       <video id ="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="100%" height="100%">
 					<source src="<?= $videoUrl ?>" type="video/mp4">
-          <track src="<?= 'tmpsrt/'.$timeStamp.'.srt' ?>" kind="subtitles" srclang="en" default>
+          <track src="<?= 'tmpsrt/'.$timeStamp.'.vtt' ?>" kind="subtitles" srclang="en" default>
 					<div class="message">
 						<p><strong>Sorry, you'll need an HTML5 Video capable browser to view this example.</strong></p>
 					</div>
